@@ -1,12 +1,12 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.SystemBackend.Enterprise
 {
     /// <summary>
     /// The EnforcementLevel class.
     /// </summary>
-    [JsonConverter(typeof(EnforcementLevelJsonConverter))] 
+    [JsonConverter(typeof(EnforcementLevelJsonConverter))]
     public class EnforcementLevel : IEquatable<EnforcementLevel>
     {
         /// <summary>

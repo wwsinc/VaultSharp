@@ -4,10 +4,9 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using VaultSharp.V1.AuthMethods;
 using VaultSharp.V1.AuthMethods.Cert;
 using VaultSharp.V1.AuthMethods.Kerberos;
@@ -37,30 +36,6 @@ namespace VaultSharp.Core
         {
             VaultClientSettings = vaultClientSettings;
 
-#if NET45
-            var handler = new WebRequestHandler();
-
-            // if auth method is kerberos, then set the credentials in the handler.
-            if (vaultClientSettings.AuthMethodInfo?.AuthMethodType == AuthMethodType.Kerberos)
-            {
-                var kerberosAuthMethodInfo = vaultClientSettings.AuthMethodInfo as KerberosAuthMethodInfo;
-                handler.PreAuthenticate = kerberosAuthMethodInfo.PreAuthenticate;
-                handler.Credentials = kerberosAuthMethodInfo.Credentials;
-            }
-
-#elif NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48
-
-            var handler = new WinHttpHandler();
-
-            // if auth method is kerberos, then set the credentials in the handler.
-            if (vaultClientSettings.AuthMethodInfo?.AuthMethodType == AuthMethodType.Kerberos)
-            {
-                var kerberosAuthMethodInfo = vaultClientSettings.AuthMethodInfo as KerberosAuthMethodInfo;
-                handler.PreAuthenticate = kerberosAuthMethodInfo.PreAuthenticate;
-                handler.ServerCredentials = kerberosAuthMethodInfo.Credentials;
-            }
-
-#else
             var handler = new HttpClientHandler();
 
             // if auth method is kerberos, then set the credentials in the handler.
@@ -70,8 +45,6 @@ namespace VaultSharp.Core
                 handler.PreAuthenticate = kerberosAuthMethodInfo.PreAuthenticate;
                 handler.Credentials = kerberosAuthMethodInfo.Credentials;
             }
-
-#endif
 
             // not the best place, but a very convenient place to add cert of certauthmethod.
             if (vaultClientSettings.AuthMethodInfo?.AuthMethodType == AuthMethodType.Cert)
@@ -130,16 +103,16 @@ namespace VaultSharp.Core
         public async Task MakeVaultApiRequest(string mountPoint, string path, HttpMethod httpMethod, object requestData = null, bool rawResponse = false, bool unauthenticated = false)
         {
             Checker.NotNull(mountPoint, "mountPoint");
-            
+
             await MakeVaultApiRequest(VaultSharpV1Path + mountPoint.Trim('/') + path, httpMethod, requestData, rawResponse, unauthenticated: unauthenticated).ConfigureAwait(VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
         }
 
         public async Task MakeVaultApiRequest(string resourcePath, HttpMethod httpMethod, object requestData = null, bool rawResponse = false, bool unauthenticated = false)
         {
-            await MakeVaultApiRequest<JToken>(resourcePath, httpMethod, requestData, rawResponse, unauthenticated: unauthenticated).ConfigureAwait(VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+            await MakeVaultApiRequest<JsonDocument>(resourcePath, httpMethod, requestData, rawResponse, unauthenticated: unauthenticated).ConfigureAwait(VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
         }
 
-        public async Task<TResponse> MakeVaultApiRequest<TResponse>(string mountPoint, string path, HttpMethod httpMethod, object requestData = null, bool rawResponse = false, Action<HttpResponseMessage> postResponseAction = null, string wrapTimeToLive = null, bool unauthenticated = false) where TResponse : class 
+        public async Task<TResponse> MakeVaultApiRequest<TResponse>(string mountPoint, string path, HttpMethod httpMethod, object requestData = null, bool rawResponse = false, Action<HttpResponseMessage> postResponseAction = null, string wrapTimeToLive = null, bool unauthenticated = false) where TResponse : class
         {
             Checker.NotNull(mountPoint, "mountPoint");
 
@@ -199,7 +172,7 @@ namespace VaultSharp.Core
                 var requestUri = new Uri(_httpClient.BaseAddress, new Uri(resourcePath, UriKind.Relative));
 
                 var requestContent = requestData != null
-                    ? new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8)
+                    ? new StringContent(JsonSerializer.Serialize(requestData), Encoding.UTF8)
                     : null;
 
                 HttpRequestMessage httpRequestMessage = null;
@@ -232,8 +205,8 @@ namespace VaultSharp.Core
 
                         httpRequestMessage = new HttpRequestMessage(httpMethod, requestUri)
                         {
-                            Content = requestData != null 
-                            ? new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/merge-patch+json")
+                            Content = requestData != null
+                            ? new StringContent(JsonSerializer.Serialize(requestData), Encoding.UTF8, "application/merge-patch+json")
                             : null
                         };
 
@@ -271,7 +244,7 @@ namespace VaultSharp.Core
                 {
                     if (!string.IsNullOrWhiteSpace(responseText))
                     {
-                        var response = rawResponse ? (responseText as TResponse) : JsonConvert.DeserializeObject<TResponse>(responseText);
+                        var response = rawResponse ? (responseText as TResponse) : JsonSerializer.Deserialize<TResponse>(responseText);
                         return response;
                     }
 

@@ -1,12 +1,12 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.AuthMethods
 {
     /// <summary>
     /// A helper class for retrieving and comparing Authentication Backend types.
     /// </summary>
-    [JsonConverter(typeof(AuthMethodTypeJsonConverter))] 
+    [JsonConverter(typeof(AuthMethodTypeJsonConverter))]
     public class AuthMethodType : IEquatable<AuthMethodType>
     {
         /// <summary>

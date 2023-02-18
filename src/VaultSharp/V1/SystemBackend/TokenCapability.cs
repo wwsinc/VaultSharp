@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace VaultSharp.V1.SystemBackend
 {
@@ -16,14 +16,20 @@ namespace VaultSharp.V1.SystemBackend
         {
             get
             {
-                if (this.ContainsKey("capabilities"))
+                if (TryGetValue("capabilities", out var capabilitiesElement) &&
+                    capabilitiesElement is JsonElement capabilitiesArray && capabilitiesArray.ValueKind == JsonValueKind.Array)
                 {
-                    var values = this["capabilities"] as JArray;
+                    var capabilitiesList = new List<string>();
 
-                    if (values != null)
+                    foreach (var capabilityElement in capabilitiesArray.EnumerateArray())
                     {
-                        return values.ToObject<List<string>>();
-                    }                     
+                        if (capabilityElement.ValueKind == JsonValueKind.String)
+                        {
+                            capabilitiesList.Add(capabilityElement.GetString());
+                        }
+                    }
+
+                    return capabilitiesList;
                 }
 
                 return Enumerable.Empty<string>();

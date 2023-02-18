@@ -4,16 +4,15 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using VaultSharp.V1.AuthMethods;
 using VaultSharp.Core;
+using VaultSharp.V1.AuthMethods;
 using VaultSharp.V1.Commons;
 using VaultSharp.V1.SecretsEngines;
 using VaultSharp.V1.SystemBackend.Enterprise;
 using VaultSharp.V1.SystemBackend.MFA;
 using VaultSharp.V1.SystemBackend.Plugin;
-using Newtonsoft.Json.Linq;
 
 namespace VaultSharp.V1.SystemBackend
 {
@@ -303,7 +302,7 @@ namespace VaultSharp.V1.SystemBackend
                 }
 
                 // for head calls, the response is empty. So return a null object, to avoid misleading callers.
-                var healthStatus = JsonConvert.DeserializeObject<HealthStatus>(vaultApiException.Message);
+                var healthStatus = JsonSerializer.Deserialize<HealthStatus>(vaultApiException.Message);
                 healthStatus.HttpStatusCode = vaultApiException.StatusCode;
 
                 return healthStatus;
@@ -312,8 +311,11 @@ namespace VaultSharp.V1.SystemBackend
 
         public async Task<bool> GetInitStatusAsync()
         {
-            var response = await _polymath.MakeVaultApiRequest<JToken>("v1/sys/init", HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
-            return response["initialized"].Value<bool>();
+            var response = await _polymath.MakeVaultApiRequest<JsonDocument>("v1/sys/init", HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+            using (response)
+            {
+                return response.RootElement.GetProperty("initialized").GetBoolean();
+            }
         }
 
         public async Task<MasterCredentials> InitAsync(InitOptions initOptions)
@@ -421,7 +423,7 @@ namespace VaultSharp.V1.SystemBackend
         public async Task<Secret<SecretsEngine>> GetSecretBackendAsync(string mountPoint)
         {
             var resourcePath = string.Format(CultureInfo.InvariantCulture, "v1/sys/mounts/{0}", mountPoint.Trim('/'));
-            return await _polymath.MakeVaultApiRequest<Secret<SecretsEngine>>(resourcePath, HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);            
+            return await _polymath.MakeVaultApiRequest<Secret<SecretsEngine>>(resourcePath, HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
         }
 
         public async Task<Secret<Dictionary<string, SecretsEngine>>> GetSecretBackendsAsync()
@@ -523,10 +525,10 @@ namespace VaultSharp.V1.SystemBackend
 
         public async Task<Secret<Dictionary<string, object>>> ReadRawSecretAsync(string storagePath)
         {
-            var response = await _polymath.MakeVaultApiRequest<Secret<JToken>>("v1/sys/raw/" + storagePath.Trim('/'), HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+            var response = await _polymath.MakeVaultApiRequest<Secret<JsonElement>>("v1/sys/raw/" + storagePath.Trim('/'), HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
 
-            string value = response.Data["value"].Value<string>();
-            var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(value);
+            string value = response.Data.GetProperty("value").GetString();
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(value);
 
             return _polymath.GetMappedSecret(response, data);
         }
@@ -535,7 +537,7 @@ namespace VaultSharp.V1.SystemBackend
         {
             var requestData = new
             {
-                value = JsonConvert.SerializeObject(values)
+                value = JsonSerializer.Serialize(values)
             };
 
             await _polymath.MakeVaultApiRequest("v1/sys/raw/" + storagePath.Trim('/'), HttpMethod.Put, requestData).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);

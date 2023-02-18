@@ -1,15 +1,13 @@
-﻿
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json;
+﻿using System;
 using System.Runtime.Serialization;
-using System;
+using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.SecretsEngines.Transit
 {
     /// <summary>
     /// The set of hash algorithms that are currently supported by Vault.
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum TransitHashAlgorithm
     {
         [Obsolete]

@@ -1,5 +1,4 @@
-﻿
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.SecretsEngines.Transit
 {
@@ -15,14 +14,14 @@ namespace VaultSharp.V1.SecretsEngines.Transit
         /// Gets or sets the base64 encoded input data to be hashed.
         /// </summary>
         /// <value>The base64 encoded input data to be hashed.</value>
-        [JsonProperty("input")]
+        [JsonPropertyName("input")]
         public string Base64EncodedInput { get; set; }
 
         /// <summary>
         /// Gets or sets the output encoding for the response.
         /// </summary>
         /// <value>The output encoding for the response.</value>
-        [JsonProperty("format")]
+        [JsonPropertyName("format")]
         public OutputEncodingFormat Format { get; set; }
     }
 }

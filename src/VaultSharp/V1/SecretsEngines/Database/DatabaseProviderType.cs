@@ -1,12 +1,12 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.SecretsEngines.Database
 {
     /// <summary>
     /// A helper class for retrieving and comparing DatabaseProviderTypes.
     /// </summary>
-    [JsonConverter(typeof(DatabaseProviderTypeJsonConverter))] 
+    [JsonConverter(typeof(DatabaseProviderTypeJsonConverter))]
     public class DatabaseProviderType : IEquatable<DatabaseProviderType>
     {
         /// <summary>

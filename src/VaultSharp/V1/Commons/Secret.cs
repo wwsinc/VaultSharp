@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using VaultSharp.V1.SecretsEngines;
 
 namespace VaultSharp.V1.Commons
@@ -17,7 +16,7 @@ namespace VaultSharp.V1.Commons
         /// <value>
         /// The request identifier.
         /// </value>
-        [JsonProperty("request_id")]
+        [JsonPropertyName("request_id")]
         public string RequestId { get; set; }
 
         /// <summary>
@@ -26,7 +25,7 @@ namespace VaultSharp.V1.Commons
         /// <value>
         /// The lease identifier.
         /// </value>
-        [JsonProperty("lease_id")]
+        [JsonPropertyName("lease_id")]
         public string LeaseId { get; set; }
 
         /// <summary>
@@ -35,7 +34,7 @@ namespace VaultSharp.V1.Commons
         /// <value>
         ///   <c>true</c> if renewable; otherwise, <c>false</c>.
         /// </value>
-        [JsonProperty("renewable")]
+        [JsonPropertyName("renewable")]
         public bool Renewable { get; set; }
 
         /// <summary>
@@ -44,7 +43,7 @@ namespace VaultSharp.V1.Commons
         /// <value>
         /// The lease duration seconds.
         /// </value>
-        [JsonProperty("lease_duration")]
+        [JsonPropertyName("lease_duration")]
         public int LeaseDurationSeconds { get; set; }
 
         /// <summary>
@@ -53,7 +52,7 @@ namespace VaultSharp.V1.Commons
         /// <value>
         /// The data.
         /// </value>
-        [JsonProperty("data")]
+        [JsonPropertyName("data")]
         public TData Data { get; set; }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace VaultSharp.V1.Commons
         /// <value>
         /// The wrapped information.
         /// </value>
-        [JsonProperty("wrap_info")]
+        [JsonPropertyName("wrap_info")]
         public WrapInfo WrapInfo { get; set; }
 
         /// <summary>
@@ -71,7 +70,7 @@ namespace VaultSharp.V1.Commons
         /// <value>
         /// The warnings.
         /// </value>
-        [JsonProperty("warnings")]
+        [JsonPropertyName("warnings")]
         public List<string> Warnings { get; set; }
 
         /// <summary>
@@ -80,7 +79,7 @@ namespace VaultSharp.V1.Commons
         /// <value>
         /// The authorization information.
         /// </value>
-        [JsonProperty("auth")]
+        [JsonPropertyName("auth")]
         public AuthInfo AuthInfo { get; set; }
     }
 }

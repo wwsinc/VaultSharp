@@ -1,52 +1,36 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.SystemBackend
 {
     /// <summary>
     /// Converts the <see cref="AuditBackendType" /> object to and from JSON.
     /// </summary>
-    internal class AuditBackendTypeJsonConverter : JsonConverter
+    internal class AuditBackendTypeJsonConverter : JsonConverter<AuditBackendType>
     {
         /// <summary>
         /// Writes the JSON representation of the object.
         /// </summary>
-        /// <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        /// <param name="writer">The JSON writer to write to.</param>
+        /// <param name="value">The value to write.</param>
+        /// <param name="options">The serialization options.</param>
+        public override void Write(Utf8JsonWriter writer, AuditBackendType value, JsonSerializerOptions options)
         {
-            var auditBackendType = value as AuditBackendType;
-
-            if (auditBackendType != null)
-            {
-                writer.WriteValue(auditBackendType.Value);
-            }
+            writer.WriteStringValue(value.Value);
         }
 
         /// <summary>
         /// Reads the JSON representation of the object.
         /// </summary>
-        /// <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
-        /// <param name="objectType">Type of the object.</param>
-        /// <param name="existingValue">The existing value of object being read.</param>
-        /// <param name="serializer">The calling serializer.</param>
-        /// <returns>
-        /// The object value.
-        /// </returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        /// <param name="reader">The JSON reader to read from.</param>
+        /// <param name="typeToConvert">The type to convert.</param>
+        /// <param name="options">The serialization options.</param>
+        /// <returns>The object value.</returns>
+        public override AuditBackendType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var type = reader.Value as string;
+            string type = reader.GetString();
             return new AuditBackendType(type);
         }
-
-        /// <summary>
-        /// Determines whether this instance can convert the specified object type.
-        /// </summary>
-        /// <param name="objectType">Type of the object.</param>
-        /// <returns>
-        /// <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
-        /// </returns>
-        public override bool CanConvert(Type objectType) => objectType == typeof (AuditBackendType);
     }
 }

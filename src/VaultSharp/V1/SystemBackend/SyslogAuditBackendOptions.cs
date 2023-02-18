@@ -1,7 +1,7 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.SystemBackend
-{ 
+{
     /// <summary>
     /// Represents the options for the <see cref="SyslogAuditBackend"/>.
     /// </summary>
@@ -15,7 +15,7 @@ namespace VaultSharp.V1.SystemBackend
         /// <value>
         /// The facility.
         /// </value>
-        [JsonProperty("facility")]
+        [JsonPropertyName("facility")]
         public string Facility { get; set; }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace VaultSharp.V1.SystemBackend
         /// <value>
         /// The tag.
         /// </value>
-        [JsonProperty("tag")]
+        [JsonPropertyName("tag")]
         public string Tag { get; set; }
 
         /// <summary>

@@ -1,14 +1,13 @@
-﻿
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.SecretsEngines.AliCloud.Models
 {
     public class AliCloudRemotePolicyModel
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
     }
 }

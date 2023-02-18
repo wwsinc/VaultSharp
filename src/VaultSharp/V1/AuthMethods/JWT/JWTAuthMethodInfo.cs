@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using VaultSharp.Core;
 
 namespace VaultSharp.V1.AuthMethods.JWT
@@ -34,7 +34,7 @@ namespace VaultSharp.V1.AuthMethods.JWT
         /// <value>
         /// The role name.
         /// </value>
-        [JsonProperty("role")]
+        [JsonPropertyName("role")]
         public string RoleName { get; }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace VaultSharp.V1.AuthMethods.JWT
         /// <value>
         /// The jwt.
         /// </value>
-        [JsonProperty("jwt")]
+        [JsonPropertyName("jwt")]
         public string JWT { get; }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace VaultSharp.V1.AuthMethods.JWT
         /// The signed JSON Web Token (JWT).
         /// </param>
         public JWTAuthMethodInfo(string roleName, string jwt)
-            : this (AuthMethodType.JWT.Type, roleName, jwt)
+            : this(AuthMethodType.JWT.Type, roleName, jwt)
         {
         }
 

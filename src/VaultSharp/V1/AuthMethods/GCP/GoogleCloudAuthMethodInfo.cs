@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using VaultSharp.Core;
 
 namespace VaultSharp.V1.AuthMethods.GoogleCloud
@@ -34,7 +34,7 @@ namespace VaultSharp.V1.AuthMethods.GoogleCloud
         /// <value>
         /// The role name.
         /// </value>
-        [JsonProperty("role")]
+        [JsonPropertyName("role")]
         public string RoleName { get; }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace VaultSharp.V1.AuthMethods.GoogleCloud
         /// <value>
         /// The jwt.
         /// </value>
-        [JsonProperty("jwt")]
+        [JsonPropertyName("jwt")]
         public string JWT { get; }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace VaultSharp.V1.AuthMethods.GoogleCloud
         /// For gce type roles, this is an identity metadata token. <see href="https://cloud.google.com/compute/docs/instances/verifying-instance-identity#request_signature"/>
         /// </param>
         public GoogleCloudAuthMethodInfo(string roleName, string jwt)
-            : this (AuthMethodType.GoogleCloud.Type, roleName, jwt)
+            : this(AuthMethodType.GoogleCloud.Type, roleName, jwt)
         {
         }
 

@@ -1,13 +1,11 @@
-﻿
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.SecretsEngines.Transit
 {
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum TransitDataKeyType
-    {        
+    {
         [EnumMember(Value = "plaintext")]
         plaintext,
 

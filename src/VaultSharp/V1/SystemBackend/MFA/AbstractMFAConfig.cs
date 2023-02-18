@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.SystemBackend.MFA
 {
     public abstract class AbstractMFAConfig
-    { 
+    {
         /// <summary>
         /// Gets the name of MFA method.
         /// </summary>
@@ -13,7 +13,7 @@ namespace VaultSharp.V1.SystemBackend.MFA
         /// <summary>
         /// Gets or sets the type of MFA.
         /// </summary>
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
     }
 }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.AuthMethods.Token
 {
@@ -12,7 +8,7 @@ namespace VaultSharp.V1.AuthMethods.Token
         /// <summary>
         /// List of available token roles.
         /// </summary>
-        [JsonProperty("keys")]
+        [JsonPropertyName("keys")]
         public List<string> Keys { get; set; }
     }
 }

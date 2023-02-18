@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace VaultSharp.Core
 {
@@ -62,11 +62,11 @@ namespace VaultSharp.Core
         public VaultApiException(HttpStatusCode httpStatusCode, string message) : base(message)
         {
             HttpStatusCode = httpStatusCode;
-            StatusCode = (int) HttpStatusCode;
+            StatusCode = (int)HttpStatusCode;
 
             try
             {
-                var structured = JsonConvert.DeserializeObject<Dictionary<string, IEnumerable<string>>>(message);
+                var structured = JsonSerializer.Deserialize<Dictionary<string, IEnumerable<string>>>(message);
 
                 if (structured.ContainsKey("errors"))
                 {

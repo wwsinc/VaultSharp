@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using VaultSharp.Core;
 using VaultSharp.V1.Commons;
 

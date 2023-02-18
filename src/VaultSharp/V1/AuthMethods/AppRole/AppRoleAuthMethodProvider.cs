@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using VaultSharp.Core;
 using VaultSharp.V1.AuthMethods.AppRole.Models;
 using VaultSharp.V1.Commons;
@@ -35,7 +36,7 @@ namespace VaultSharp.V1.AuthMethods.AppRole
         {
             Checker.NotNull(mountPoint, "mountPoint");
             Checker.NotNull(roleName, "roleName");
-            
+
             return await _polymath.MakeVaultApiRequest<Secret<AppRoleRoleModel>>("v1/auth/" + mountPoint.Trim('/') + "/role/" + roleName.Trim('/'), HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
         }
 
@@ -287,8 +288,19 @@ namespace VaultSharp.V1.AuthMethods.AppRole
 
             List<string> nullValue = null;
 
-            JArray cidrs = secret.Data["secret_id_bound_cidrs"] as JArray;
-            return _polymath.GetMappedSecret(secret, cidrs != null ? cidrs.ToObject<List<string>>() : nullValue);
+            if (secret != null && secret.Data != null && secret.Data.TryGetValue("secret_id_bound_cidrs", out var cidrs))
+            {
+                if (cidrs is JsonElement cidrsElement && cidrsElement.ValueKind == JsonValueKind.Array)
+                {
+                    return _polymath.GetMappedSecret(secret, cidrsElement.EnumerateArray().Select(e => e.GetString()).ToList());
+                }
+                else if (cidrs is List<object> cidrsList)
+                {
+                    return _polymath.GetMappedSecret(secret, cidrsList.Select(cidr => cidr?.ToString()).ToList());
+                }
+            }
+
+            return _polymath.GetMappedSecret(secret, nullValue);
         }
 
         public async Task WriteRoleSecretIdBoundCIDRsAsync(string roleName, List<string> secretIdBoundCIDRs, string mountPoint = AuthMethodDefaultPaths.AppRole)
@@ -316,8 +328,19 @@ namespace VaultSharp.V1.AuthMethods.AppRole
 
             List<string> nullValue = null;
 
-            JArray cidrs = secret.Data["token_bound_cidrs"] as JArray;
-            return _polymath.GetMappedSecret(secret, cidrs != null ? cidrs.ToObject<List<string>>() : nullValue);
+            if (secret != null && secret.Data != null && secret.Data.TryGetValue("token_bound_cidrs", out var cidrs))
+            {
+                if (cidrs is JsonElement cidrsElement && cidrsElement.ValueKind == JsonValueKind.Array)
+                {
+                    return _polymath.GetMappedSecret(secret, cidrsElement.EnumerateArray().Select(e => e.GetString()).ToList());
+                }
+                else if (cidrs is List<object> cidrsList)
+                {
+                    return _polymath.GetMappedSecret(secret, cidrsList.Select(cidr => cidr?.ToString()).ToList());
+                }
+            }
+
+            return _polymath.GetMappedSecret(secret, nullValue);
         }
 
         public async Task WriteRoleTokenBoundCIDRsAsync(string roleName, List<string> tokenBoundCIDRs, string mountPoint = AuthMethodDefaultPaths.AppRole)
