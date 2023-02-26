@@ -74,8 +74,7 @@ The following implementations are supported due to that.
 
 - .NET Core 1.x, 2.x, 3.x
 - .NET Framework 4.5, 4.6, 4.6.1, 4.6.2, 4.7, 4.7.1, 4.7.2 and 4.8
-- .NET 5.0
-- .NET 6.0
+- .NET 7.0
 - Mono 4.x and above
 - Xamarin.iOS 10.x and above
 - Xamarin Mac 3.x and above
