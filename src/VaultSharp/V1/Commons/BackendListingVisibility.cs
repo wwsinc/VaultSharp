@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
+
 namespace VaultSharp.Core
 {
     /// <summary>

@@ -9,28 +9,17 @@ namespace VaultSharp.V1.SystemBackend.Enterprise
     /// </summary>
     internal class EnforcementLevelJsonConverter : JsonConverter<EnforcementLevel>
     {
-        /// <summary>
-        /// Reads the JSON representation of the object.
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="typeToConvert"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public override EnforcementLevel Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, EnforcementLevel value, JsonSerializerOptions serializer)
         {
-            string type = reader.GetString();
-            return new EnforcementLevel(type);
+            if (value != null)
+            {
+                writer.WriteStringValue(value.Value);
+            }
         }
 
-        /// <summary>
-        /// Writes the JSON representation of the object.
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="value"></param>
-        /// <param name="options"></param>
-        public override void Write(Utf8JsonWriter writer, EnforcementLevel value, JsonSerializerOptions options)
+        public override EnforcementLevel Read(ref Utf8JsonReader reader, Type type, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.Value);
+            return new EnforcementLevel(reader.GetString());
         }
     }
 }

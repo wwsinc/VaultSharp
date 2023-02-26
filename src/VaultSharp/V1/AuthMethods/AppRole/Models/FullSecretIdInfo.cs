@@ -23,7 +23,7 @@ namespace VaultSharp.V1.AuthMethods.AppRole.Models
 
         [JsonPropertyName("secret_id_accessor")]
         public string SecretIdAccessor { get; set; }
-
+        
         [JsonPropertyName("secret_id_num_uses")]
         public long SecretIdNumberOfUses { get; set; }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace VaultSharp.Core
 {
@@ -62,7 +63,7 @@ namespace VaultSharp.Core
         public VaultApiException(HttpStatusCode httpStatusCode, string message) : base(message)
         {
             HttpStatusCode = httpStatusCode;
-            StatusCode = (int)HttpStatusCode;
+            StatusCode = (int) HttpStatusCode;
 
             try
             {

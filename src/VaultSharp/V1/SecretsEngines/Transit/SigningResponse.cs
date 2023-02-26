@@ -13,7 +13,6 @@ namespace VaultSharp.V1.SecretsEngines.Transit
         /// </summary>
         /// <value>The list of results.</value>
         [JsonPropertyName("batch_results")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<SigningBatchResponse> BatchResults { get; set; }
     }
 

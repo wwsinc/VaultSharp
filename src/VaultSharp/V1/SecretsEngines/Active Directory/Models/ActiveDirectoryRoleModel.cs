@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.SecretsEngines.ActiveDirectory.Models

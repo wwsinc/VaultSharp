@@ -4,15 +4,17 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
-using VaultSharp.Core;
+using System.Text.Json.Serialization;
 using VaultSharp.V1.AuthMethods;
+using VaultSharp.Core;
 using VaultSharp.V1.Commons;
 using VaultSharp.V1.SecretsEngines;
 using VaultSharp.V1.SystemBackend.Enterprise;
 using VaultSharp.V1.SystemBackend.MFA;
 using VaultSharp.V1.SystemBackend.Plugin;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace VaultSharp.V1.SystemBackend
 {
@@ -311,11 +313,8 @@ namespace VaultSharp.V1.SystemBackend
 
         public async Task<bool> GetInitStatusAsync()
         {
-            var response = await _polymath.MakeVaultApiRequest<JsonDocument>("v1/sys/init", HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
-            using (response)
-            {
-                return response.RootElement.GetProperty("initialized").GetBoolean();
-            }
+            var response = await _polymath.MakeVaultApiRequest<JsonObject>("v1/sys/init", HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+            return response["initialized"].GetValue<bool>();
         }
 
         public async Task<MasterCredentials> InitAsync(InitOptions initOptions)
@@ -423,7 +422,7 @@ namespace VaultSharp.V1.SystemBackend
         public async Task<Secret<SecretsEngine>> GetSecretBackendAsync(string mountPoint)
         {
             var resourcePath = string.Format(CultureInfo.InvariantCulture, "v1/sys/mounts/{0}", mountPoint.Trim('/'));
-            return await _polymath.MakeVaultApiRequest<Secret<SecretsEngine>>(resourcePath, HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+            return await _polymath.MakeVaultApiRequest<Secret<SecretsEngine>>(resourcePath, HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);            
         }
 
         public async Task<Secret<Dictionary<string, SecretsEngine>>> GetSecretBackendsAsync()
@@ -525,9 +524,9 @@ namespace VaultSharp.V1.SystemBackend
 
         public async Task<Secret<Dictionary<string, object>>> ReadRawSecretAsync(string storagePath)
         {
-            var response = await _polymath.MakeVaultApiRequest<Secret<JsonElement>>("v1/sys/raw/" + storagePath.Trim('/'), HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+            var response = await _polymath.MakeVaultApiRequest<Secret<JsonObject>>("v1/sys/raw/" + storagePath.Trim('/'), HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
 
-            string value = response.Data.GetProperty("value").GetString();
+            string value = response.Data["value"].ToString();
             var data = JsonSerializer.Deserialize<Dictionary<string, object>>(value);
 
             return _polymath.GetMappedSecret(response, data);

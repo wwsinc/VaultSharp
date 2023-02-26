@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace VaultSharp.V1.Commons
 {
     public class SecretSubkeysInfo
-    {
+    { 
         [JsonPropertyName("metadata")]
         public CurrentSecretMetadata Metadata { get; set; }
 

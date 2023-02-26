@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+
+using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.SecretsEngines.Transit
 {
@@ -7,7 +9,7 @@ namespace VaultSharp.V1.SecretsEngines.Transit
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum TransitHashFunction
-    {
+    {        
         SHA1,
         SHA224,
         SHA256,

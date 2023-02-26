@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using System.Collections.Generic;
 
 namespace VaultSharp.V1.AuthMethods.AppRole.Models
 {
@@ -45,7 +45,7 @@ namespace VaultSharp.V1.AuthMethods.AppRole.Models
         public List<string> TokenPolicies { get; set; }
 
         [JsonPropertyName("token_ttl")]
-        public long TokenTimeToLive { get; set; }
+        public long TokenTimeToLive { get; set; }        
 
         [JsonPropertyName("token_type")]
         public AuthTokenType TokenType { get; set; }

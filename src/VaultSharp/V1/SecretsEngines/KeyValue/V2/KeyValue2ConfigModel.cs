@@ -3,7 +3,7 @@
 namespace VaultSharp.V1.SecretsEngines.KeyValue.V2
 {
     public class KeyValue2ConfigModel
-    {
+    { 
         [JsonPropertyName("cas_required")]
         public bool CASRequired { get; set; }
 

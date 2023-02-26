@@ -14,7 +14,6 @@ namespace VaultSharp.V1.SecretsEngines.Transit
         /// </summary>
         /// <value>The list of results.</value>
         [JsonPropertyName("batch_results")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<HmacBatchResponse> BatchResults { get; set; }
     }
 
@@ -32,7 +31,6 @@ namespace VaultSharp.V1.SecretsEngines.Transit
         /// </summary>
         /// <value>The error response.</value>
         [JsonPropertyName("error")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string ErrorResponse { get; set; }
     }
 }

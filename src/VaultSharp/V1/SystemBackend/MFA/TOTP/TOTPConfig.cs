@@ -29,13 +29,13 @@ namespace VaultSharp.V1.SystemBackend.MFA.TOTP
         /// Gets or sets the size in bytes of the generated key.
         /// </summary>
         [JsonPropertyName("key_size")]
-        public int KeySize { get; set; }
+        public int KeySize  { get; set; }
 
         /// <summary>
         /// Gets or sets the pixel size of the generated square QR code.
         /// </summary>
         [JsonPropertyName("qr_size")]
-        public int QRSize { get; set; }
+        public int QRSize  { get; set; }
 
         /// <summary>
         /// Gets or sets the hashing algorithm used to generate the TOTP code. 

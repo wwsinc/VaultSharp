@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+
 using VaultSharp.Core;
 using VaultSharp.V1.AuthMethods.AppRole.Models;
 using VaultSharp.V1.Commons;
@@ -36,7 +39,7 @@ namespace VaultSharp.V1.AuthMethods.AppRole
         {
             Checker.NotNull(mountPoint, "mountPoint");
             Checker.NotNull(roleName, "roleName");
-
+            
             return await _polymath.MakeVaultApiRequest<Secret<AppRoleRoleModel>>("v1/auth/" + mountPoint.Trim('/') + "/role/" + roleName.Trim('/'), HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
         }
 
@@ -288,19 +291,12 @@ namespace VaultSharp.V1.AuthMethods.AppRole
 
             List<string> nullValue = null;
 
-            if (secret != null && secret.Data != null && secret.Data.TryGetValue("secret_id_bound_cidrs", out var cidrs))
-            {
-                if (cidrs is JsonElement cidrsElement && cidrsElement.ValueKind == JsonValueKind.Array)
-                {
-                    return _polymath.GetMappedSecret(secret, cidrsElement.EnumerateArray().Select(e => e.GetString()).ToList());
-                }
-                else if (cidrs is List<object> cidrsList)
-                {
-                    return _polymath.GetMappedSecret(secret, cidrsList.Select(cidr => cidr?.ToString()).ToList());
-                }
-            }
+            JsonArray cidrs = secret.Data["secret_id_bound_cidrs"] as JsonArray;
+            var r = new List<string>();
 
-            return _polymath.GetMappedSecret(secret, nullValue);
+            cidrs.ToList().ForEach(c => r.Add(c.ToString()));
+
+            return _polymath.GetMappedSecret(secret, cidrs != null ? r : nullValue);
         }
 
         public async Task WriteRoleSecretIdBoundCIDRsAsync(string roleName, List<string> secretIdBoundCIDRs, string mountPoint = AuthMethodDefaultPaths.AppRole)
@@ -326,21 +322,14 @@ namespace VaultSharp.V1.AuthMethods.AppRole
 
             var secret = await _polymath.MakeVaultApiRequest<Secret<Dictionary<string, object>>>("v1/auth/" + mountPoint.Trim('/') + "/role/" + roleName.Trim('/') + "/token-bound-cidrs", HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
 
-            List<string> nullValue = null;
+            List<string> cids = null;
 
-            if (secret != null && secret.Data != null && secret.Data.TryGetValue("token_bound_cidrs", out var cidrs))
+            if (secret.Data["token_bound_cidrs"] != null)
             {
-                if (cidrs is JsonElement cidrsElement && cidrsElement.ValueKind == JsonValueKind.Array)
-                {
-                    return _polymath.GetMappedSecret(secret, cidrsElement.EnumerateArray().Select(e => e.GetString()).ToList());
-                }
-                else if (cidrs is List<object> cidrsList)
-                {
-                    return _polymath.GetMappedSecret(secret, cidrsList.Select(cidr => cidr?.ToString()).ToList());
-                }
+                cids = JsonSerializer.Deserialize<List<string>>(secret.Data["token_bound_cidrs"] as JsonArray);
             }
 
-            return _polymath.GetMappedSecret(secret, nullValue);
+            return _polymath.GetMappedSecret(secret, cids);
         }
 
         public async Task WriteRoleTokenBoundCIDRsAsync(string roleName, List<string> tokenBoundCIDRs, string mountPoint = AuthMethodDefaultPaths.AppRole)

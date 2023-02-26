@@ -51,6 +51,6 @@ namespace VaultSharp.V1.AuthMethods.AppRole.Models
         /// supplied. May not be longer than role's secret_id_ttl.
         /// </summary>
         [JsonPropertyName("ttl")]
-        public long TimeToLive { get; set; }
+        public long TimeToLive { get; set; }        
     }
 }

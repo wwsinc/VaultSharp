@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿
+using System.Text.Json.Serialization;
 using VaultSharp.Core;
 
 namespace VaultSharp.V1.AuthMethods.Azure
@@ -124,7 +125,7 @@ namespace VaultSharp.V1.AuthMethods.Azure
         /// This information can be obtained through instance metadata.
         /// </param>
         public AzureAuthMethodInfo(string roleName, string jwt, string subscriptionId = null, string resourceGroupName = null, string virtualMachineName = null, string virtualMachineScaleSetName = null)
-            : this(AuthMethodType.Azure.Type, roleName, jwt, subscriptionId, resourceGroupName, virtualMachineName, virtualMachineScaleSetName)
+            : this (AuthMethodType.Azure.Type, roleName, jwt, subscriptionId, resourceGroupName, virtualMachineName, virtualMachineScaleSetName)
         {
         }
 

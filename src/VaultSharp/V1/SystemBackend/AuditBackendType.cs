@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Text.Json.Serialization;
+using VaultSharp.V1.Commons;
 
 namespace VaultSharp.V1.SystemBackend
 {
     /// <summary>
     /// A helper class for retrieving and comparing Audit Backend types.
     /// </summary>
-    [JsonConverter(typeof(AuditBackendTypeJsonConverter))]
+    [JsonConverter(typeof(AuditBackendTypeJsonConverter))] 
     public class AuditBackendType : IEquatable<AuditBackendType>
     {
         /// <summary>

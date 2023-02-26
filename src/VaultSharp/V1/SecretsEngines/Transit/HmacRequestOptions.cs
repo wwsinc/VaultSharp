@@ -7,14 +7,13 @@ namespace VaultSharp.V1.SecretsEngines.Transit
     /// Represents the request to calculate the HMAC for a given data string.
     /// <seealso cref="HmacSingleInput" />
     public class HmacRequestOptions : HmacSingleInput
-    {
+    { 
         /// <summary>
         /// Gets or sets a list of items for processing.  
         /// If set, then the <see cref="HmacSingleInput.Base64EncodedInput">input</see> parameter will be ignored.
         /// </summary>
         /// <value>The list of items for processing.</value>
         [JsonPropertyName("batch_input")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<HmacSingleInput> BatchInput { get; set; }
     }
 
@@ -31,7 +30,6 @@ namespace VaultSharp.V1.SecretsEngines.Transit
         /// </summary>
         /// <value>The key version to use for the operation.</value>
         [JsonPropertyName("key_version")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? KeyVersion { get; set; }
 
         /// <summary>

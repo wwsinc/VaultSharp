@@ -10,7 +10,7 @@ namespace VaultSharp.V1.SecretsEngines.RabbitMQ
         /// <value>
         /// The tags
         /// </value>
-        [JsonPropertyName("tags")]
+        [JsonPropertyName("tags")] 
         public string Tags { get; set; }
 
         /// <summary>

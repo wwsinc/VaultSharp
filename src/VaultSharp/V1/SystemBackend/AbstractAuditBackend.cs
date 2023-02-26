@@ -6,6 +6,9 @@ namespace VaultSharp.V1.SystemBackend
     /// Represents an audit backend.
     /// </summary>
     [JsonConverter(typeof(AuditBackendJsonConverter))]
+    [JsonDerivedType(typeof(FileAuditBackend))]
+    [JsonDerivedType(typeof(SyslogAuditBackend))]
+    [JsonDerivedType(typeof(CustomAuditBackend))]
     public abstract class AbstractAuditBackend
     {
         /// <summary>

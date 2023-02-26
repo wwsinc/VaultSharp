@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿
+using System.Text.Json.Serialization;
+
 
 namespace VaultSharp.V1.SecretsEngines.Consul.Models
 {

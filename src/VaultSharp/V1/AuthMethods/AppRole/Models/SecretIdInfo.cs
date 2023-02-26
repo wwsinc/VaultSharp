@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.AuthMethods.AppRole.Models
 {
@@ -12,7 +14,7 @@ namespace VaultSharp.V1.AuthMethods.AppRole.Models
 
         [JsonPropertyName("secret_id_accessor")]
         public string SecretIdAccessor { get; set; }
-
+        
         [JsonPropertyName("secret_id_num_uses")]
         public long SecretIdNumberOfUses { get; set; }
 

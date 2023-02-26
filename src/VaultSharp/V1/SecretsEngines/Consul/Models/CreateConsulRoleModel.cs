@@ -27,7 +27,7 @@ namespace VaultSharp.V1.SecretsEngines.Consul.Models
 
         [JsonPropertyName("node_identities")]
         public List<string> NodeIdentities { get; set; }
-
+        
         [JsonPropertyName("partition")]
         public string ConsulAdminPartition { get; set; }
 

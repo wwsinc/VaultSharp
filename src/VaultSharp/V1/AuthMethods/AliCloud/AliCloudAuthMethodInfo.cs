@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿
+using System.Text.Json.Serialization;
 using VaultSharp.Core;
 
 namespace VaultSharp.V1.AuthMethods.AliCloud
@@ -76,7 +77,7 @@ namespace VaultSharp.V1.AuthMethods.AliCloud
         /// string values (though the length of that array will probably only be one).
         /// </param>       
         public AliCloudAuthMethodInfo(string roleName, string base64EncodedIdentityRequestUrl, string base64EncodedIdentityRequestHeaders)
-            : this(AuthMethodType.AliCloud.Type, roleName, base64EncodedIdentityRequestUrl, base64EncodedIdentityRequestHeaders)
+            : this (AuthMethodType.AliCloud.Type, roleName, base64EncodedIdentityRequestUrl, base64EncodedIdentityRequestHeaders)
         {
         }
 

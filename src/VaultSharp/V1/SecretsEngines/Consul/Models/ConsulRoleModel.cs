@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace VaultSharp.V1.SecretsEngines.Consul.Models

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace VaultSharp.V1.SecretsEngines.PKI
 {
     /// <summary>

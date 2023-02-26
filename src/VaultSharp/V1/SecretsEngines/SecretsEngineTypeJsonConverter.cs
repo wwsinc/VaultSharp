@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using VaultSharp.V1.AuthMethods;
 
 namespace VaultSharp.V1.SecretsEngines
 {
@@ -9,28 +10,17 @@ namespace VaultSharp.V1.SecretsEngines
     /// </summary>
     internal class SecretsEngineTypeJsonConverter : JsonConverter<SecretsEngineType>
     {
-        /// <summary>
-        /// Reads the JSON representation of the object.
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="typeToConvert"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public override SecretsEngineType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, SecretsEngineType value, JsonSerializerOptions serializer)
         {
-            var type = reader.GetString();
-            return new SecretsEngineType(type);
+            if (value != null)
+            {
+                writer.WriteStringValue(value.Type);
+            }
         }
 
-        /// <summary>
-        /// Writes the JSON representation of the object.
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="value"></param>
-        /// <param name="options"></param>
-        public override void Write(Utf8JsonWriter writer, SecretsEngineType value, JsonSerializerOptions options)
+        public override SecretsEngineType Read(ref Utf8JsonReader reader, Type type, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.Type);
+            return new SecretsEngineType(reader.GetString());
         }
     }
 }

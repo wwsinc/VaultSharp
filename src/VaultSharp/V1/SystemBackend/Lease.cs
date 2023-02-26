@@ -42,7 +42,6 @@ namespace VaultSharp.V1.SystemBackend
         /// Gets or sets the time to live for the lease.
         /// </summary>
         [JsonPropertyName("ttl")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int TimeToLive { get; set; }
     }
 }

@@ -38,7 +38,7 @@ namespace VaultSharp.V1.SystemBackend.MFA.Duo
         /// Gets or sets the SecretsEngine key for Duo.
         /// </summary>
         [JsonPropertyName("secret_key")]
-        public string SecretKey { get; set; }
+        public string SecretKey  { get; set; }
 
         /// <summary>
         /// Gets or sets the Integration key for Duo.

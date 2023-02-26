@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using VaultSharp.V1.SystemBackend.Enterprise;
 
 namespace VaultSharp.V1.AuthMethods.Token.Models
 {
@@ -81,7 +82,6 @@ namespace VaultSharp.V1.AuthMethods.Token.Models
         ///   The epoch of the last renewal time
         /// </value>
         [JsonPropertyName("last_renewal_time")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int LastRenewalTime { get; set; }
 
         /// <summary>
