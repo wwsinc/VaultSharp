@@ -51,7 +51,6 @@ namespace VaultSharp.Samples
                     }
                     catch (Exception ex)
                     {
-                        Console.SetOut(existingOut);
                         sw.Close();
                         fs.Close();
 
@@ -84,9 +83,12 @@ namespace VaultSharp.Samples
                     var requestContent = req.Content != null ? req.Content.ReadAsStringAsync().Result : "";
 
                     Console.WriteLine("===Start Request===");
+
                     Console.WriteLine(req.Method + "   " + req.RequestUri.ToString());
                     Console.WriteLine(requestContent);
+                    
                     Console.WriteLine("===End Request===");
+                    Console.WriteLine();
                 },
 
                 AfterApiResponseAction = r =>
