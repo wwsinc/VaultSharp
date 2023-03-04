@@ -6,6 +6,7 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>VaultSharp.snk</AssemblyOriginatorKeyFile>
+    <PackageId>Wws.VaultSharp</PackageId>
     <Title>VaultSharp</Title>
     <Version>1.12.2.2</Version>
     <Authors>Raja Nadar</Authors>
