@@ -78,7 +78,7 @@ namespace VaultSharp
         /// Use the handler parameter to set proxy etc. 
         /// It is essential that your HttpClient use the handler, since it has certificate auth etc.
         /// </summary>
-        public Func<HttpMessageHandler, HttpClient> MyHttpClientProviderFunc { get; set; }
+        public Func<HttpClientHandler, HttpClient> MyHttpClientProviderFunc { get; set; }
 
         /// <summary>
         /// Use custom secret engine mount points globally rather than on every method call.
