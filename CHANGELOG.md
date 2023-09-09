@@ -1,16 +1,37 @@
-## 1.12.2.2 (TBD)
+## 1.13.0.2 (TBD)
+
+**IMROVEMENTS:**
+
+ * [GH-309](https://github.com/rajanadar/VaultSharp/issues/309) identity/oidc/key: create, read, update and delete apis.
+ * [GH-309](https://github.com/rajanadar/VaultSharp/issues/309) identity/oidc/role: create, read, update and delete apis.
+ * [GH-309](https://github.com/rajanadar/VaultSharp/issues/309) auth/approle: ````PullNewSecretIdAsync``` allows for reponse wrapping using ```wrapTimeToLive``` parameter
+
+## 1.13.0.1 (April 03, 2023)
+
+**BUG FIXES:**
+
+  * [GH-312](https://github.com/rajanadar/VaultSharp/issues/312) Fix ```rotation_period``` deserialization issues in System.Text.Json. And all such duration fields that Vault allows in string and integer form.
+
+## 1.13.0.1-beta1 (April 01, 2023)
+
+**BUG FIXES:**
+
+  * [GH-312](https://github.com/rajanadar/VaultSharp/issues/312) Fix ```rotation_period``` deserialization issues in System.Text.Json. And all such duration fields that Vault allows in string and integer form.
+
+## 1.13.0 (March 25, 2023)
 
 **BREAKING CHANGES:**
 
   * [GH-300](https://github.com/rajanadar/VaultSharp/issues/300) Remove support for EOL .NET 4.5
   * Remove support for EOL .NET 4.6, .NET 4.6.1
-  * Remove support for .NET Standard 1.3  
+  * Remove support for .NET Standard 1.3
+  * [GH-300](https://github.com/rajanadar/VaultSharp/issues/304) Remove Newtonsoft.Json dependency
 
 **IMROVEMENTS:**
 
   * [GH-301](https://github.com/rajanadar/VaultSharp/pull/301) Add support for reading a secret backend
   * Add support for .NET 7.0
-  * Use System.Text.Json as the JSON provider instead of Newtonsoft.Json
+  * [GH-300](https://github.com/rajanadar/VaultSharp/issues/304) Use System.Text.Json as the JSON provider instead of Newtonsoft.Json
 
 ## 1.12.2.1 (January 23, 2023)
 
