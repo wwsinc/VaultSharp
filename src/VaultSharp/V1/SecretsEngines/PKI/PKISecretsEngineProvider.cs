@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VaultSharp.Core;
@@ -84,23 +85,11 @@ namespace VaultSharp.V1.SecretsEngines.PKI
             };
         }
 
-        public async Task<Secret<CertificateData>> ReadCertificateAsync(string serialNumber, string pkiBackendMountPoint = null)
+        public async Task<Secret<RawCertificateData>> ReadCertificateAsync(string serialNumber, string pkiBackendMountPoint = null)
         {
             Checker.NotNull(serialNumber, "serialNumber");
 
-            var certificateDataSecret = await _polymath.MakeVaultApiRequest<Secret<CertificateData>>(pkiBackendMountPoint ?? _polymath.VaultClientSettings.SecretsEngineMountPoints.PKI, "/cert/" + serialNumber , HttpMethod.Get, unauthenticated: true).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
-            
-            // Populate properties not set by vault API
-            if (string.IsNullOrEmpty(certificateDataSecret.Data.SerialNumber))
-            {
-                certificateDataSecret.Data.SerialNumber = serialNumber;
-            }
-
-            if (certificateDataSecret.Data.CertificateFormat == CertificateFormat.None)
-            {
-                certificateDataSecret.Data.CertificateFormat = CertificateFormat.pem;
-            }
-
+            var certificateDataSecret = await _polymath.MakeVaultApiRequest<Secret<RawCertificateData>>(pkiBackendMountPoint ?? _polymath.VaultClientSettings.SecretsEngineMountPoints.PKI, "/cert/" + serialNumber , HttpMethod.Get, unauthenticated: true).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
             return certificateDataSecret;
         }
 
@@ -116,6 +105,26 @@ namespace VaultSharp.V1.SecretsEngines.PKI
             var result = await _polymath.MakeVaultApiRequest<Secret<CertificateKeys>>(pkiBackendMountPoint ?? _polymath.VaultClientSettings.SecretsEngineMountPoints.PKI, "/certs/revoked", _polymath.ListHttpMethod).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
 
             return result;
+        }
+        
+        public async Task<Secret<CertificateData>> ReadDefaultIssuerCertificateChainAsync(CertificateFormat certificateFormat, string pkiBackendMountPoint = null)
+        {
+            if (certificateFormat != CertificateFormat.json
+                && certificateFormat != CertificateFormat.pem)
+            {
+                throw new ArgumentException("Certificate format should be json or pem.");
+            }
+
+            // json
+            string path = "/cert/ca_chain";
+
+            if (certificateFormat == CertificateFormat.pem)
+            {
+                path = "/ca_chain";
+            }
+
+            var certificateDataSecret = await _polymath.MakeVaultApiRequest<Secret<CertificateData>>(pkiBackendMountPoint ?? _polymath.VaultClientSettings.SecretsEngineMountPoints.PKI, path, HttpMethod.Get, unauthenticated: true).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+            return certificateDataSecret;
         }
     }
 }

@@ -108,7 +108,7 @@ namespace VaultSharp.V1.SystemBackend
             return await _polymath.MakeVaultApiRequest<Secret<BackendConfig>>(resourcePath, HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
         }
 
-        public async Task ConfigureAuthBackendAsync(string path, NewBackendConfig backendConfig)
+        public async Task ConfigureAuthBackendAsync(string path, BackendConfig backendConfig)
         {
             var resourcePath = string.Format(CultureInfo.InvariantCulture, "v1/sys/auth/{0}/tune", path.Trim('/'));
             await _polymath.MakeVaultApiRequest(resourcePath, HttpMethod.Post, backendConfig).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
@@ -460,7 +460,7 @@ namespace VaultSharp.V1.SystemBackend
             return await _polymath.MakeVaultApiRequest<Secret<BackendConfig>>(resourcePath, HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
         }
 
-        public async Task ConfigureSecretBackendAsync(string path, NewBackendConfig backendConfig)
+        public async Task ConfigureSecretBackendAsync(string path, BackendConfig backendConfig)
         {
             var resourcePath = string.Format(CultureInfo.InvariantCulture, "v1/sys/mounts/{0}/tune", path.Trim('/'));
             await _polymath.MakeVaultApiRequest(resourcePath, HttpMethod.Post, backendConfig).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
@@ -514,6 +514,17 @@ namespace VaultSharp.V1.SystemBackend
         public async Task DeleteACLPolicyAsync(string policyName)
         {
             await _polymath.MakeVaultApiRequest("v1/sys/policies/acl/" + policyName, HttpMethod.Delete).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+        }
+        
+        // raja todo: add password policy configuration apis
+        
+        public async Task<Secret<string>> GeneratePasswordFromPasswordPolicyAsync(string passwordPolicyName)
+        {
+            var response = await _polymath
+                .MakeVaultApiRequest<Secret<JsonObject>>("v1/sys/policies/password/" + passwordPolicyName + "/generate", HttpMethod.Get).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+
+            var result = _polymath.GetMappedSecret(response, response.Data["password"].ToString());
+            return result;
         }
 
         public async Task<Secret<ListInfo>> GetRawSecretKeysAsync(string storagePathPrefix)

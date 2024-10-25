@@ -1,5 +1,7 @@
-﻿using VaultSharp.Core;
+﻿using System.Text.Json;
+using VaultSharp.Core;
 using VaultSharp.V1;
+using VaultSharp.V1.SecretsEngines.Database;
 
 namespace VaultSharp
 {

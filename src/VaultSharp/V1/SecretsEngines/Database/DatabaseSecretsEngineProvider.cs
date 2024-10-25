@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using VaultSharp.Core;
 using VaultSharp.V1.Commons;
+using VaultSharp.V1.SecretsEngines.Database.Models;
 
 namespace VaultSharp.V1.SecretsEngines.Database
 {
@@ -12,6 +13,43 @@ namespace VaultSharp.V1.SecretsEngines.Database
         public DatabaseSecretsEngineProvider(Polymath polymath)
         {
             _polymath = polymath;
+        }
+        
+        public async Task ConfigureConnectionAsync(string connectionName, ConnectionConfigModel connectionConfigModel, string mountPoint = null)
+        {
+            await _polymath.MakeVaultApiRequest(mountPoint ?? _polymath.VaultClientSettings.SecretsEngineMountPoints.Database, "/config/" + connectionName, HttpMethod.Post, requestData: connectionConfigModel).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+        }
+        
+        public async Task<Secret<ConnectionModel>> ReadConnectionConfigAsync(string connectionName, string mountPoint = null, string wrapTimeToLive = null)
+        {
+            Checker.NotNull(connectionName, "connectionName");
+
+            return await _polymath.MakeVaultApiRequest<Secret<ConnectionModel>>(mountPoint ?? _polymath.VaultClientSettings.SecretsEngineMountPoints.Database, "/config/" + connectionName, HttpMethod.Get, wrapTimeToLive: wrapTimeToLive).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+        }
+        
+        public async Task<Secret<ListInfo>> ReadAllConnectionsAsync(string mountPoint = null, string wrapTimeToLive = null)
+        {
+            return await _polymath.MakeVaultApiRequest<Secret<ListInfo>>(mountPoint ?? _polymath.VaultClientSettings.SecretsEngineMountPoints.Database, "/config?list=true", HttpMethod.Get, wrapTimeToLive: wrapTimeToLive).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+        }
+        
+        public async Task DeleteConnectionAsync(string connectionName, string mountPoint = null)
+        {
+            await _polymath.MakeVaultApiRequest(mountPoint ?? _polymath.VaultClientSettings.SecretsEngineMountPoints.Database, "/config/" + connectionName, HttpMethod.Delete).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+        }
+        
+        public async Task ResetConnectionAsync(string connectionName, string mountPoint = null)
+        {
+            await _polymath.MakeVaultApiRequest(mountPoint ?? _polymath.VaultClientSettings.SecretsEngineMountPoints.Database, "/reset/" + connectionName, HttpMethod.Post).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+        }
+        
+        public async Task ReloadPluginAsync(string pluginName, string mountPoint = null)
+        {
+            await _polymath.MakeVaultApiRequest(mountPoint ?? _polymath.VaultClientSettings.SecretsEngineMountPoints.Database, "/reload/" + pluginName, HttpMethod.Post).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
+        }
+        
+        public async Task RotateRootCredentialsAsync(string connectionName, string mountPoint = null)
+        {
+            await _polymath.MakeVaultApiRequest(mountPoint ?? _polymath.VaultClientSettings.SecretsEngineMountPoints.Database, "/rotate-root/" + connectionName, HttpMethod.Post).ConfigureAwait(_polymath.VaultClientSettings.ContinueAsyncTasksOnCapturedContext);
         }
 
         public async Task CreateRoleAsync(string roleName, Role role, string mountPoint = null)

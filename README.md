@@ -51,7 +51,7 @@ Secret<SecretData> kv2Secret = await vaultClient.V1.Secrets.KeyValue.V2
 
 // Generate a dynamic Consul credential
 Secret<ConsulCredentials> consulCreds = await vaultClient.V1.Secrets.Consul.GetCredentialsAsync(consulRole, consulMount);
-string consulToken = consulCredentials.Data.Token;
+string consulToken = consulCreds.Data.Token;
 ```
 
 ### Gist of the features
@@ -82,6 +82,11 @@ The following implementations are supported due to that.
 - UWP 10.x and above
 
 Source: https://github.com/dotnet/standard/blob/master/docs/versions.md
+
+VaultSharp will follow the .NET EOL dates mentioned here: 
+ * https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-framework
+ * https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core
+ * https://learn.microsoft.com/en-us/dotnet/standard/frameworks#supported-target-frameworks
 
 ### VaultSharp and Consul Support
 
@@ -377,6 +382,11 @@ IVaultClient vaultClient = new VaultClient(vaultClientSettings);
 // any operations done using the vaultClient will use the 
 // vault token/policies mapped to the current ActiveDirectory/Kerberos identity.
 ```
+
+If you are dealing with a keytab file and krb5 config file and want to use VaultSharp, you can do that using the following two steps:
+
+ - Use this gist to generate SP-Nego-Token from the keytab and krb5 file: https://gist.github.com/rajanadar/28c86d967695262bfe1f17ae82fb3d3d
+ - Once you have the token use VaultSettings.BeforeApiRequestAction to set the Authorization header to the Sp-nego-toekn value from the above helper method.
 
 #### OCI Auth Method
 
@@ -1176,7 +1186,17 @@ string secretId = nomadCredentials.Data.SecretId;
 
 #### OpenLDAP Secrets Engine
 
-##### Generate static credentials
+##### Generate dynamic role credentials
+
+ - This endpoint offers the credential information for a given role.
+
+```cs
+Secret<LDAPCredentials> credentials = await vaultClient.V1.Secrets.OpenLDAP.GetDynamicCredentialsAsync(roleName);
+string username = credentials.Data.Username;
+string password = credentials.Data.Password;
+```
+
+##### Generate static role credentials
 
  - This endpoint offers the credential information for a given static-role.
 

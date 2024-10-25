@@ -182,13 +182,15 @@ namespace VaultSharp.Core
             return new Secret<T2>
             {
                 Data = destinationData,
+
                 LeaseDurationSeconds = sourceSecret.LeaseDurationSeconds,
                 RequestId = sourceSecret.RequestId,
                 Warnings = sourceSecret.Warnings,
                 LeaseId = sourceSecret.LeaseId,
                 Renewable = sourceSecret.Renewable,
                 AuthInfo = sourceSecret.AuthInfo,
-                WrapInfo = sourceSecret.WrapInfo
+                WrapInfo = sourceSecret.WrapInfo,
+                MountType = sourceSecret.MountType,
             };
         }
 
@@ -198,8 +200,10 @@ namespace VaultSharp.Core
             {
                 var requestUri = new Uri(_httpClient.BaseAddress, new Uri(resourcePath, UriKind.Relative));
 
-                var requestContent = requestData != null
-                    ? new StringContent(JsonSerializer.Serialize(requestData), Encoding.UTF8)
+                string requestJson = requestData != null ? JsonSerializer.Serialize(requestData) : null;
+
+                var requestContent = requestJson != null
+                    ? new StringContent(requestJson, Encoding.UTF8)
                     : null;
 
                 HttpRequestMessage httpRequestMessage = null;
