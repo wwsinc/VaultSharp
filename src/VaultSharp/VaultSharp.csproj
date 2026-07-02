@@ -75,7 +75,15 @@
     <AssemblyTitle>VaultSharp .NET 7</AssemblyTitle>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='net8.0'">
+    <AssemblyTitle>VaultSharp .NET 8</AssemblyTitle>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="V1\SecretsEngines\PKI\Certificates\" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
     <WarningLevel>5</WarningLevel>
   </PropertyGroup>
 
